@@ -85,9 +85,9 @@ CLI/CGI模式的PHP属于单进程的SAPI模式。这类的请求在处理一次
 这里的常量是PHP自己的一些常量，这些常量要么是硬编码在程序中,比如PHP_VERSION，要么是写在配置头文件中，
 比如PEAR_EXTENSION_DIR，这些是写在config.w32.h文件中。
 
-* **初始化ZEND引擎和核心组件**
+* **初始化Zend引擎和核心组件**
 
-前面提到的zend_startup函数的作用就是初始化ZEND引擎，这里的初始化操作包括内存管理初始化、
+前面提到的zend_startup函数的作用就是初始化Zend引擎，这里的初始化操作包括内存管理初始化、
 全局使用的函数指针初始化（如前面所说的zend_printf等），对PHP源文件进行词法分析、语法分析、
 中间代码执行的函数指针的赋值，初始化若干HashTable（比如函数表，常量表等等），为ini文件解析做准备，
 为PHP源文件解析做准备，注册内置函数（如strlen、define等），注册标准常量（如E_ALL、TRUE、NULL等）、注册GLOBALS全局变量等。
@@ -124,7 +124,7 @@ php_startup_sapi_content_types函数用来初始化SAPI对于不同类型内容�
 * **初始化静态构建的模块和共享模块(MINIT)**
 
 php_register_internal_extensions_func函数用来注册静态构建的模块，也就是默认加载的模块，
-我们可以将其认为为内置模块。在PHP5.3.0版本中内置的模块包括PHP标准扩展模块（/ext/standard/目录，
+我们可以将其认为内置模块。在PHP5.3.0版本中内置的模块包括PHP标准扩展模块（/ext/standard/目录，
 这里是我们用的最频繁的函数，比如字符串函数，数学函数，数组操作函数等等），日历扩展模块、FTP扩展模块、
 session扩展模块等。这些内置模块并不是一成不变的，在不同的PHP模板中，由于不同时间的需求或其它影响因素会导致这些默认加载的模块会变化，
 比如从代码中我们就可以看到mysql、xml等扩展模块曾经或将来会作为内置模块出现。
@@ -155,7 +155,7 @@ php_disable_classes函数用来禁用PHP的一些类。这些被禁用的类来�
 在处理了文件相关的内容，PHP会调用php_request_startup做请求初始化操作。
 请求初始化操作，除了图中显示的调用每个模块的请求初始化函数外，还做了较多的其它工作，其主要内容如下：
 
-* **激活ZEND引擎**
+* **激活Zend引擎**
 
 gc_reset函数用来重置垃圾收集机制，当然这是在PHP5.3之后才有的。
 
@@ -239,9 +239,9 @@ PHP关闭请求的过程是一个若干个关闭操作的集合，这个集合�
 
 sapi_flush将最后的内容刷新出去。其调用的是sapi_module.flush，在CLI模式下等价于fflush函数。
 
-* **关闭ZEND引擎**
+* **关闭Zend引擎**
 
-zend_shutdown将关闭ZEND引擎。
+zend_shutdown将关闭Zend引擎。
 
 此时对应图中的流程，我们应该是执行每个模块的关闭模块操作。
 在这里只有一个zend_hash_graceful_reverse_destroy函数将module_registry销毁了。

@@ -12,19 +12,22 @@ try
 
 	$page = new BookPage($page_name);
 
+	$chapt_list = BookPage::getChapterList();
+
 	// 线下模式不显示修改时间，因为从Github读取需要的时间太长
 	$page_last_update_time = IN_PROD_MODE ? $page->getLastUpdatedAt(true, "Y-m-d H:h") : false;
 
 	// 如果获取修改时间失败，则先暂时禁用缓存，否则无法重新获取最后修改时间
 	if($page_last_update_time === false) {
-		PageCache::disable();
+		// Do not disable cache for now
+		// PageCache::disable();
 	}
 
 	$view = new SimpieView($page->toHtml(), "../templates/layout/book.php", SimpieView::IS_RAW_TEXT);
 	$view->render(array(
 		'title' => $page->getTitle(),
 		'page'  => $page,
-		'chapt_list' => BookPage::getChapterList(),
+		'chapt_list' => $chapt_list,
 		'is_detail_view' => ($page_name != 'index'), // 目录页不需要边栏
 		'page_last_update_time' => $page_last_update_time,
 	));
@@ -48,8 +51,6 @@ catch(PageNotFoundException $e)
 		'book_page' => $page_name,
 		'exception' => $e,
 		'title' 	=> $title,
-		'rev' 		=> $rev,
-		'exception' => $e,
 		'is_detail_view' => true,
 		'chapt_list' => $chapt_list,
 	));
